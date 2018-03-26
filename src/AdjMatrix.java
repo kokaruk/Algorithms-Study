@@ -67,6 +67,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
                         adjMatrix[i] = new boolean[adjMatrix[0].length];
                     }
               }
+              // sift column left
               System.arraycopy(adjMatrix[i], removeAtIndex+1,
                                     adjMatrix[i], removeAtIndex, adjMatrix[i].length-removeAtIndex-1);
             }
@@ -97,7 +98,16 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
             adjMatrix[tarLabelIndex][srcLabelIndex] = true;
         } else throw new NoSuchElementException("Vertex does not exist.");
     } // end of addEdge()
-	
+
+    public void removeEdge(T srcLabel, T tarLabel) {
+        // Implement me!
+        int srcLabelIndex = V.indexOf(srcLabel);
+        int tarLabelIndex = V.indexOf(tarLabel);
+        if (srcLabelIndex >= 0 && tarLabelIndex >= 0 ){
+            adjMatrix[srcLabelIndex][tarLabelIndex] = false;
+            adjMatrix[tarLabelIndex][srcLabelIndex] = false;
+        } else throw new NoSuchElementException("Vertex does not exist.");
+    } // end of removeEdges()
 
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
@@ -106,13 +116,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         
         return neighbours;
     } // end of neighbours()
-    
 
-    
-    public void removeEdge(T srcLabel, T tarLabel) {
-        // Implement me!
-    } // end of removeEdges()
-	
     
     public void printVertices(PrintWriter os) {
         // Implement me!
