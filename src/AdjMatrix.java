@@ -14,15 +14,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 
     private List<T> V;  // vertices
     private boolean[][] adjMatrix;
-    int E; //edges
 
 	/**
 	 * Constructs empty graph.
 	 */
     public AdjMatrix() {
-    	// Implement me!
+
         V = new LinkedList<>();
-        E = 0; // edges count
         adjMatrix = new boolean[V.size()+1][V.size()+1];
 
     } // end of AdjMatrix()
@@ -35,7 +33,6 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
      *  This will limit the number of instances where we have to resize our matrix.
      */
     public void addVertex(T vertLabel) {
-        // Implement me!
         // If the number of vertices is more than half the size of matrix,
         // double the size of matrix
         if(!V.contains(vertLabel)){ //if not contains
@@ -67,11 +64,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
                         adjMatrix[i] = new boolean[adjMatrix[0].length];
                     }
               }
-              // sift column left
+              // shift column left
               System.arraycopy(adjMatrix[i], removeAtIndex+1,
                                     adjMatrix[i], removeAtIndex, adjMatrix[i].length-removeAtIndex-1);
             }
-
             // resize matrix
             int size = adjMatrix[0].length;
             int numV = V.size();
@@ -83,10 +79,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
                 }
                 adjMatrix = newAdjMatrix;
             }
-
         }
-
-        // Implement me!
     } // end of removeVertex()
     
     public void addEdge(T srcLabel, T tarLabel) {
@@ -109,19 +102,21 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         } else throw new NoSuchElementException("Vertex does not exist.");
     } // end of removeEdges()
 
-    //TODO Neighbours
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<>();
-        
-        // Implement me!
+        int vertLabelIndex = V.indexOf(vertLabel);
+        if (vertLabelIndex >= 0){
+            for (int i = 0; i < V.size(); i++) {
+                if (adjMatrix[vertLabelIndex][i]) neighbours.add(V.get(i));
+            }
+        } else throw new NoSuchElementException("Vertex does not exist.");
+
         
         return neighbours;
     } // end of neighbours()
 
-    
     public void printVertices(PrintWriter os) {
-        // Implement me!
-        Iterator<T> it = V.iterator();
+         Iterator<T> it = V.iterator();
         T vertice;
         if(it.hasNext()){
             vertice = it.next();
@@ -134,10 +129,12 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         os.println();
     } // end of printVertices()
 	
-    //TODO print edges
     public void printEdges(PrintWriter os) {
-        // Implement me!
-
+        for(int i = 0; i < V.size(); i++){
+            for (int j = 0; j < V.size(); j++){
+                if(adjMatrix[i][j]) System.out.println(V.get(i) + " " + V.get(j));
+            }
+        }
     } // end of printEdges()
     
     //TODO shortest path distance
