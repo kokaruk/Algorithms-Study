@@ -109,8 +109,9 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         } else throw new NoSuchElementException("Vertex does not exist.");
     } // end of removeEdges()
 
+    //TODO Neighbours
     public ArrayList<T> neighbours(T vertLabel) {
-        ArrayList<T> neighbours = new ArrayList<T>();
+        ArrayList<T> neighbours = new ArrayList<>();
         
         // Implement me!
         
@@ -133,13 +134,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         os.println();
     } // end of printVertices()
 	
-    
+    //TODO print edges
     public void printEdges(PrintWriter os) {
         // Implement me!
 
     } // end of printEdges()
     
-    
+    //TODO shortest path distance
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
     	// Implement me!
     	
