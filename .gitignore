@@ -4,3 +4,6 @@
 
 # IntelliJ
 out/
+
+# tests
+src/testing/
