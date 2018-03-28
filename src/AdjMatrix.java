@@ -132,7 +132,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
     public void printEdges(PrintWriter os) {
         for (int i = 0; i < V.size(); i++) {
             for (int j = 0; j < V.size(); j++) {
-                if (adjMatrix[i][j]) System.out.println(V.get(i) + " " + V.get(j));
+                if (adjMatrix[i][j]) os.println(V.get(i) + " " + V.get(j));
             }
         }
     } // end of printEdges()
