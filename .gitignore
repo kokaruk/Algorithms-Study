@@ -6,4 +6,4 @@
 out/
 
 # tests
-src/testing/
+testing/
