@@ -89,7 +89,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
         if (srcLabelIndex >= 0 && tarLabelIndex >= 0) {
             adjMatrix[srcLabelIndex][tarLabelIndex] = true;
             adjMatrix[tarLabelIndex][srcLabelIndex] = true;
-        } else throw new NoSuchElementException("Vertex does not exist.");
+        } else throw new IllegalArgumentException("Vertex does not exist.");
     } // end of addEdge()
 
     public void removeEdge(T srcLabel, T tarLabel) {
@@ -99,7 +99,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
         if (srcLabelIndex >= 0 && tarLabelIndex >= 0) {
             adjMatrix[srcLabelIndex][tarLabelIndex] = false;
             adjMatrix[tarLabelIndex][srcLabelIndex] = false;
-        } else throw new NoSuchElementException("Vertex does not exist.");
+        } else throw new IllegalArgumentException("Vertex does not exist.");
     } // end of removeEdges()
 
     public ArrayList<T> neighbours(T vertLabel) {
@@ -109,7 +109,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
             for (int i = 0; i < V.size(); i++) {
                 if (adjMatrix[vertLabelIndex][i]) neighbours.add(V.get(i));
             }
-        } else throw new NoSuchElementException("Vertex does not exist.");
+        } else throw new IllegalArgumentException("Vertex does not exist.");
 
 
         return neighbours;
@@ -161,7 +161,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
             }
             // if we reach this point, source and target are disconnected
             return disconnectedDist;
-        } else throw new NoSuchElementException("Vertex does not exist.");
+        } else throw new IllegalArgumentException("Vertex does not exist.");
 
     } // end of shortestPathDistance()
 
