@@ -38,8 +38,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
         if (!V.contains(vertLabel)) { //if not contains
             V.add(vertLabel);
             int size = adjMatrix[0].length; // get size of matrix
-            int numV = V.size();
-            if (numV > 0.5 * size) {
+            if (V.size() > 0.5 * size) {
                 size = 2 * size;
                 boolean[][] newAdjMatrix = new boolean[size][size];
                 for (int i = 0; i < adjMatrix.length; i++) {
@@ -53,8 +52,8 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
 
     public void removeVertex(T vertLabel) {
         int removeAtIndex = V.indexOf(vertLabel);
-        V.remove(vertLabel);
         if (removeAtIndex >= 0) {
+            V.remove(vertLabel);
             // shift row up
             for (int i = 0; i < V.size(); i++) {
                 if (i >= removeAtIndex) {
@@ -71,7 +70,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
             // resize matrix
             int size = adjMatrix[0].length;
             int numV = V.size();
-            if (size < 0.5 * numV) {
+            if (numV < 0.5 * size) {
                 size = (int) (0.5 * size);
                 boolean[][] newAdjMatrix = new boolean[size][size];
                 for (int i = 0; i < size; i++) {
