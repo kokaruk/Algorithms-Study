@@ -46,13 +46,12 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         int removeAtIndex = V.indexOf(vertLabel);
         if (removeAtIndex >= 0) {
             V.remove(vertLabel);
-            // set col left
-            for ( int i = E.size()-1; i >= 0; i-- ) {
+            for ( int i = E.size()-1; i >= 0; i-- ) { // iterate over all occurence rows from bottom to top
                  if (incdMatrix[i][removeAtIndex]) { // found occurrence, shift row up
-                     if (incdMatrix[i + 1] != null) {
-                         incdMatrix[i] = incdMatrix[i + 1];
+                     if (incdMatrix[i + 1] != null) { // if there is a reow below
+                         incdMatrix[i] = incdMatrix[i + 1]; // copy below to top
                      } else {
-                         incdMatrix[i] = new boolean[incdMatrix[0].length];
+                         incdMatrix[i] = new boolean[incdMatrix[0].length]; // otherwise populate new row
                      }
                  } else { // shift column left
                     System.arraycopy(incdMatrix[i], removeAtIndex + 1,
