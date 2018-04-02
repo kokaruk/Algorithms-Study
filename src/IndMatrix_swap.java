@@ -10,7 +10,7 @@ import java.util.*;
  * @author Jeffrey Chan, 2016.
  */
 @SuppressWarnings("TypeParameterExplicitlyExtendsObject")
-public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
+public class IndMatrix_swap<T extends Object> implements FriendshipGraph<T> {
 
     private List<T> V; //vertices
     private int E; //edges count
@@ -19,7 +19,7 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
     /**
      * Contructs empty graph.
      */
-    IndMatrix() {
+    IndMatrix_swap() {
         V = new ArrayList<>();
         int E = 0;
         incdMatrix = new boolean[V.size() + 1][E + 1];
@@ -29,14 +29,13 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
     public void addVertex(T vertLabel) {
         if (!V.contains(vertLabel)) { // if label doesn't exist
             V.add(vertLabel);
-            int size = incdMatrix.length; // size matrix
-            //resize matrix
+            int size = incdMatrix[0].length; // size matrix
+            //resize matrix only if qty of v > 0.5 size
             if (V.size() > 0.5 * size) {
                 size *= 2;
-                int incSize = incdMatrix[0].length;
-                boolean[][] newIncdMatrix = new boolean[size][incSize];
-                for (int i = 0; i < V.size(); i++) {
-                    newIncdMatrix[i] = Arrays.copyOf(incdMatrix[i], incSize);
+                boolean[][] newIncdMatrix = new boolean[incdMatrix.length][size];
+                for (int i = 0; i < E; i++) {
+                    newIncdMatrix[i] = Arrays.copyOf(incdMatrix[i], size);
                 }
                 incdMatrix = newIncdMatrix;
             }
@@ -46,49 +45,66 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
     public void removeVertex(T vertLabel) {
         int removeAtIndex = V.indexOf(vertLabel);
         if (removeAtIndex >= 0) {
-            int j = 0;
-            while (j < E){
-                if (incdMatrix[removeAtIndex][j]){ // found edge
-                    for (int i = 0; i < V.size(); i++) {
-                        System.arraycopy(incdMatrix[i], j + 1,
-                                incdMatrix[i], j, E - j - 1);
-                    }
+            int i = 0;
+            while (i < E) {
+                if (incdMatrix[i][removeAtIndex]) { // found an incidence from this vertex
+                    System.arraycopy(incdMatrix, i + 1,
+                            incdMatrix, i, E - i - 1);
                     E--;
                 } else {
-                    j++;
+                    // shift column left
+                    System.arraycopy(incdMatrix[i], removeAtIndex + 1,
+                            incdMatrix[i], removeAtIndex, V.size() - removeAtIndex - 1);
+                    i++;
                 }
             }
 
-            // shift all up at index of vertice
-            System.arraycopy(incdMatrix, removeAtIndex + 1,
-                    incdMatrix, removeAtIndex, V.size() - removeAtIndex - 1);
-
             V.remove(vertLabel);
-            // reduce matrix size
-            resizeMatrixSize();
+            resizeRowsUp();
+
+            // resize matrix to the left
+            int size = incdMatrix[0].length;
+            if (V.size() < 0.5 * size) {
+                size = (int) (0.5 * size);
+                boolean[][] newIncdMatrix = new boolean[incdMatrix.length][size];
+                for (int k = 0; k < incdMatrix.length; k++) {
+                    newIncdMatrix[k] = Arrays.copyOf(incdMatrix[k], size);
+                }
+                incdMatrix = newIncdMatrix;
+            }
         }
+
     } // end of removeVertex()
+
 
     public void addEdge(T srcLabel, T tarLabel) {
         int srcLabelIndex = V.indexOf(srcLabel);
         int tarLabelIndex = V.indexOf(tarLabel);
         if (srcLabelIndex >= 0 && tarLabelIndex >= 0) { // if both vertices exist
             // iterate over all incidences and check if two vertexes are connected
-            if (!isIncidence(srcLabelIndex, tarLabelIndex)) {
-                E++;
-                int incSize = incdMatrix[0].length;
-                if (E > 0.5 * incSize) {
-                    incSize *= 2;
-                    int size = incdMatrix.length;
-                    boolean[][] newIncdMatrix = new boolean[size][incSize];
-                    for (int j = 0; j < V.size(); j++) {
-                        newIncdMatrix[j] = Arrays.copyOf(incdMatrix[j], incSize);
-                        // System.out.println(newIncdMatrix[j].length);
-                    }
-                    this.incdMatrix = newIncdMatrix;
+            boolean connected = false;
+            for (int j = 0; j <= E; j++) {
+                if (incdMatrix[j][srcLabelIndex] && incdMatrix[j][tarLabelIndex]) {
+                    connected = true;
+                    break;
                 }
-                incdMatrix[srcLabelIndex][E - 1] = true;
-                incdMatrix[tarLabelIndex][E - 1] = true;
+            }
+            if (!connected) {
+                E++;
+                int incSize = incdMatrix.length;
+                if (E >= 0.5 * incSize) {
+                    incSize *= 2;
+                    int size = incdMatrix[0].length;
+                    boolean[][] newIncdMatrix = new boolean[incSize][size];
+                    for (int j = 0; j < E; j++) {
+                        newIncdMatrix[j] = Arrays.copyOf(incdMatrix[j], size);
+                    }
+                    incdMatrix = newIncdMatrix;
+                }
+                boolean[] newIncidence = new boolean[incdMatrix[0].length];
+                newIncidence[srcLabelIndex] = true;
+                newIncidence[tarLabelIndex] = true;
+                incdMatrix[E - 1] = newIncidence;
             }
 
         } else throw new IllegalArgumentException("Vertex does not exist.");
@@ -98,13 +114,12 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
         int srcLabelIndex = V.indexOf(srcLabel);
         int tarLabelIndex = V.indexOf(tarLabel);
         if (srcLabelIndex >= 0 && tarLabelIndex >= 0) { // if both vertices exist
-            for (int j = 0; j <= E; j++) {
-                if (incdMatrix[srcLabelIndex][j] && incdMatrix[tarLabelIndex][j]) {
-                    for (int i = 0; i < V.size(); i++) {
-                        System.arraycopy(incdMatrix[i], j + 1,
-                                incdMatrix[i], j, E - j - 1);
-                    }
+            for (int i = 0; i < E; i++) {
+                if (incdMatrix[i][srcLabelIndex] && incdMatrix[i][tarLabelIndex]) { // if found connection
+                    System.arraycopy(incdMatrix, i + 1,
+                            incdMatrix, i, incdMatrix.length - i - 1);
                     E--;
+                    break;
                 }
             }
         } else throw new IllegalArgumentException("Vertex does not exist.");
@@ -115,9 +130,9 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
         if (vertLabelIndex >= 0) {
             ArrayList<T> neighbours = new ArrayList<>();
             for (int j = 0; j < E; j++) {
-                if (incdMatrix[vertLabelIndex][j]) {
+                if (incdMatrix[j][vertLabelIndex]) {
                     for (int i = 0; i < V.size(); i++) {
-                        if (incdMatrix[i][j] && i != vertLabelIndex) neighbours.add(V.get(i));
+                        if (incdMatrix[j][i] && i != vertLabelIndex) neighbours.add(V.get(i));
                     }
                 }
             }
@@ -141,18 +156,29 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
     } // end of printVertices()
 
     public void printEdges(PrintWriter os) {
+        // below is O(n^4) loop. on an average facebook_test takes 9.5 seconds.
+        // test requires to output a pair of edges for each vertex such as 'A B' and 'B A'
+        // too long
 
-        // for each edge
+        /*  for (int i = 0; i < V.size(); i++) {// for each vert
+            for (int j = 0; j < E; j++) { // in each incidence
+                if (incdMatrix[j][i]) { // if this incidence is true
+                    os.print(V.get(i));
+                    for (int k = 0; k < V.size(); k++) {
+                        if (incdMatrix[j][k] && k != i) os.println(" " + V.get(k));
+                    }
+                }
+            }
+        } */
+
         for (int i = 0; i < E; i++) {
             List<T> pair = new ArrayList<>();
             for (int j = 0; j < V.size(); j++) {
-                if (incdMatrix[j][i]) pair.add(V.get(j));
+                if (incdMatrix[i][j]) pair.add(V.get(j));
             }
             os.println(pair.get(0) + " " + pair.get(1));
             os.println(pair.get(1) + " " + pair.get(0)); // hack to pass test
         }
-
-
     } // end of printEdges()
 
     @SuppressWarnings("Duplicates")
@@ -181,54 +207,21 @@ public class IndMatrix<T extends Object> implements FriendshipGraph<T> {
             // if we reach this point, source and target are disconnected
             return disconnectedDist;
         } else throw new IllegalArgumentException("Vertex does not exist.");
+
     } // end of shortestPathDistance()
 
-    private void resizeMatrixSize() {
-
-        // resize matrix up
-        int vsize = incdMatrix.length; // size matrix
-        //resize matrix
-        if (V.size() < 0.5 * vsize) {
-            vsize = (int)(0.5 * vsize);
-            boolean[][] newIncdMatrix = new boolean[vsize][E];
-            for (int i = 0; i < V.size(); i++) {
-                newIncdMatrix[i] = Arrays.copyOf(incdMatrix[i], E);
-            }
-            incdMatrix = newIncdMatrix;
-        }
-
-        //resize matrix to left
-        int incSize = incdMatrix[0].length;
+    private void resizeRowsUp() {
+        //resize matrix to top
+        int incSize = incdMatrix.length;
         if (E < 0.5 * incSize) { // if incidences less than half of incidence matrix size, reduce it
             incSize = (int) (0.5 * incSize);
-            boolean[][] newIncdMatrix = new boolean[vsize][incSize];
-            for (int i = 0; i < E; i++) {
-                newIncdMatrix[i] = Arrays.copyOf(incdMatrix[i], incSize);
+            int size = incdMatrix[0].length;
+            boolean[][] newIncdMatrix = new boolean[incSize][size];
+            for (int j = 0; j < E; j++) {
+                newIncdMatrix[j] = Arrays.copyOf(incdMatrix[j], size);
             }
             incdMatrix = newIncdMatrix;
         }
-
-
     }
-
-    private boolean isIncidence(int srcLabelIndex, int tarLabelIndex) {
-        boolean connected = false;
-        for (int j = 0; j < E; j++) {
-            if (incdMatrix[srcLabelIndex][j] && incdMatrix[tarLabelIndex][j]) {
-                connected = true;
-                break;
-            }
-        }
-        return connected;
-    }
-
-   /* private void removeExistingEdge(int incIndex) {
-        // shift column left
-        for (int j = 0; j < V.size(); j++) {
-            System.arraycopy(incdMatrix[j], incIndex + 1,
-                    incdMatrix[j], incIndex, E - incIndex - 1);
-        }
-        E--;
-    } */
 
 } // end of class IndMatrix
