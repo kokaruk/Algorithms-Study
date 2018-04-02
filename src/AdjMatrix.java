@@ -102,16 +102,15 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
     } // end of removeEdges()
 
     public ArrayList<T> neighbours(T vertLabel) {
-        ArrayList<T> neighbours = new ArrayList<>();
+
         int vertLabelIndex = V.indexOf(vertLabel);
         if (vertLabelIndex >= 0) {
+            ArrayList<T> neighbours = new ArrayList<>();
             for (int i = 0; i < V.size(); i++) {
                 if (adjMatrix[vertLabelIndex][i]) neighbours.add(V.get(i));
             }
+            return neighbours;
         } else throw new IllegalArgumentException("Vertex does not exist.");
-
-
-        return neighbours;
     } // end of neighbours()
 
     public void printVertices(PrintWriter os) {
@@ -136,6 +135,7 @@ public class AdjMatrix<T extends Object> implements FriendshipGraph<T> {
         }
     } // end of printEdges()
 
+    @SuppressWarnings("Duplicates")
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
         if (V.contains(vertLabel1) && V.contains(vertLabel2)) {
             HashSet<T> visitedV = new HashSet<>();

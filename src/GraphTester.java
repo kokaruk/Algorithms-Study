@@ -146,7 +146,6 @@ public class GraphTester
 			catch (IllegalArgumentException e) {
 				System.err.println(e.getMessage());
 			}
-
 			lineNum++;
 		}
 
