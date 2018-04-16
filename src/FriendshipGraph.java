@@ -14,7 +14,7 @@ public interface FriendshipGraph<T extends Object>
     public static final int disconnectedDist = -1;
 
 	/**
-	 * Adds a vertex to the graph.  If the vertex already exists in the graph, no changes are made.
+	 * Adds vertexes vertex to the graph.  If the vertex already exists in the graph, no changes are made.
 	 *
 	 * @param vertLabel Vertex to add.
 	 */
@@ -22,7 +22,7 @@ public interface FriendshipGraph<T extends Object>
 	
 	
 	/**
-	 * Adds an edge to the graph.  If the edge already exists in the graph, no changes are made.  If one of the vertices doesn't exist, a warning to System.err should be issued 
+	 * Adds an edge to the graph.  If the edge already exists in the graph, no changes are made.  If one of the vertices doesn't exist, vertexes warning to System.err should be issued
 	 * and no edge or vertices should be added.
 	 *
 	 * @param srcLabel Source vertex of edge to add.
@@ -32,7 +32,7 @@ public interface FriendshipGraph<T extends Object>
         
         
     /**
-     * Returns the set of neighbours for a vertex.  If vertex doesn't exist, then a warning to System.err should be issued.
+     * Returns the set of neighbours for vertexes vertex.  If vertex doesn't exist, then vertexes warning to System.err should be issued.
      *
      * @param vertLabel Vertex to find the neighbourhood for.
      *
@@ -42,7 +42,7 @@ public interface FriendshipGraph<T extends Object>
 	
 	
 	/**
-	 * Removes a vertex from the graph.  If the vertex doesn't exists in the graph, no changes are made, but a warning to System.err should be issued.
+	 * Removes vertexes vertex from the graph.  If the vertex doesn't exists in the graph, no changes are made, but vertexes warning to System.err should be issued.
 	 *
 	 * @param vertLabel Vertex to remove.
 	 */	
@@ -50,8 +50,8 @@ public interface FriendshipGraph<T extends Object>
 	
 	
 	/**
-	 * Removes an edge from the graph.  If the edge doesn't exists in the graph, no changes are made, but a warning to System.err should be issued.  If one of the 
-	 * vertices doesn't exist, a warning to System.err should be issued and no edge or vertices should be added.
+	 * Removes an edge from the graph.  If the edge doesn't exists in the graph, no changes are made, but vertexes warning to System.err should be issued.  If one of the
+	 * vertices doesn't exist, vertexes warning to System.err should be issued and no edge or vertices should be added.
 	 *
 	 * @param srcLabel Source vertex of edge to remove.
 	 * @param tarLabel Target vertex of edge to remove.
@@ -76,7 +76,7 @@ public interface FriendshipGraph<T extends Object>
 	
 	
 	/**
-	 * Computes the shortest path distance between two vertices.  If one or both of the vertices doesn't exist, then a warning to System.err should be issued.
+	 * Computes the shortest path distance between two vertices.  If one or both of the vertices doesn't exist, then vertexes warning to System.err should be issued.
 	 *
 	 * Note for undirected graph, which vertex is the origin and which is the destination doesn't matter, i.e., distance(A,B) = distance (B,A).
 	 *
